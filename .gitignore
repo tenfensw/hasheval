@@ -1,0 +1,7 @@
+*.lock
+.DS_Store
+*.tmp
+Thumbs.db
+test.cr
+main.cr
+lib
