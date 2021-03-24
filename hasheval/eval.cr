@@ -1,7 +1,7 @@
 require "./guesser.cr"
 
 module HashEval
-	def self.eval_native(chopped : String) : Hash(String, Bool | Float64 | Int32 | String | Nil)
+	def self.eval_native(chopped : String, delimeter : String = "=>") : Hash(String, Bool | Float64 | Int32 | String | Nil)
 		result = Hash(String, Bool | Float64 | Int32 | String | Nil).new
 
 		# get all pairs raw
@@ -9,7 +9,7 @@ module HashEval
 
 		# now process the pairs
 		pairs_raw.each do |pair|
-			keyv, valuev = extract_pair_values(pair, "=>")
+			keyv, valuev = extract_pair_values(pair, delimeter)
 			result.put(keyv.to_s, valuev) {}
 		end
 		
@@ -24,8 +24,9 @@ module HashEval
 		type = guess_type(raw_chopped)
 
 		case type
-		when Type::Native
-			return self.eval_native(raw_chopped[1...-1])
+		when Type::Native, Type::JSONy
+			seperator = (Type::JSONy ? ":" : "=>")
+			return self.eval_native(raw_chopped[1...-1], seperator)
 		else
 			raise ParsingException.new("TODO")
 		end
