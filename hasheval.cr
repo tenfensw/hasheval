@@ -1,0 +1,1 @@
+require "./hasheval/eval.cr"

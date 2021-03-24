@@ -1,0 +1,13 @@
+name: hasheval
+version: 0.0.1
+
+authors:
+- Tim K <timprogrammer@rambler.ru>
+
+description: Hash evaluation in Crystal (string to hash, limited)
+
+development_dependencies:
+   webmock:
+     github: ysbaddaden/minitest.cr
+
+license: MIT
