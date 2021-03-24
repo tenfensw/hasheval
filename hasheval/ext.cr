@@ -111,4 +111,55 @@ class String
 
 		return result
 	end
+
+	# replace single-quoted substrings with double-quoted
+	# ones
+	def replace_single_with_double
+		inside_single = false
+		inside_quotes = false
+		inside_escape = false
+		result = Array(Char).new
+
+		self.each_char do |character|
+			if inside_single
+				if character == '"'
+					result.push('\\') # escape needed when converting
+				end
+
+				result.push(character)
+
+				if character == '\''
+					# stop single quoting
+					result.pop
+					result.push('"')
+
+					inside_single = false
+				end
+			elsif inside_quotes
+				# things are fine here
+				if character == '"'
+					inside_quotes = false
+				else
+					result.push(character)
+				end
+			elsif character == '\'' && !inside_escape
+				inside_single = true # inside single quotes now
+			elsif character == '"' && !inside_escape
+				inside_quotes = true # inside double quotes now
+			else
+				result.push(character)
+			end
+
+			if inside_escape && character != '\\'
+				inside_escape = false
+			end
+		end
+
+		return result.join
+	end
+
+	# undouble-quoted string
+	def to_unquoted_s
+		return self.gsub("\\\"", "<ESCAPED_Q>").gsub("\"", "").gsub("<ESCAPED_Q>", "\"")
+	end
 end

@@ -33,9 +33,9 @@ module HashEval
 		case type
 		when Type::Native, Type::JSONy
 			seperator = (Type::JSONy ? ":" : "=>")
-			return self.eval_native(raw_chopped[1...-1], seperator)
-		else
-			raise ParsingException.new("TODO")
+			return eval_native(raw_chopped[1...-1], seperator)
+		when Type::HamlAttributes
+			return eval_haml_attributes(raw_chopped[1...-1])
 		end
 	end
 end

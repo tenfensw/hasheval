@@ -9,3 +9,4 @@
 #
 
 require "./hasheval/eval.cr"
+require "./hasheval/html.cr"
