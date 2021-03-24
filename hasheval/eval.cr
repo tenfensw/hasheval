@@ -1,8 +1,10 @@
 require "./guesser.cr"
 
 module HashEval
-	def self.eval_native(chopped : String, delimeter : String = "=>") : Hash(String, Bool | Float64 | Int32 | String | Nil)
-		result = Hash(String, Bool | Float64 | Int32 | String | Nil).new
+	# evaluate the specified hash string assuming it has Ruby 1.9
+	# simplified hash syntax or the ordinary one
+	private def self.eval_native(chopped : String, delimeter : String = "=>") : Hash(String, Bool | BigFloat | Int32 | String | Nil)
+		result = Hash(String, Bool | BigFloat | Int32 | String | Nil).new
 
 		# get all pairs raw
 		pairs_raw = chopped.remove_whitespaces.split_respecting_quotes(',')
@@ -16,6 +18,11 @@ module HashEval
 		return result
 	end
 
+	# autodetects the specified stringified hash type and evaluates 
+	# it into a `Hash(String, Bool | BigFloat | Int32 | String | Nil)`
+	#
+	# throws `ParsingException` in case of a syntax or any other
+	# internal error
 	def self.eval(raw : String)
 		# eval function
 		raw_chopped = raw.chomp.strip

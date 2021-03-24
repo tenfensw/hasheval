@@ -1,21 +1,21 @@
-# type guessing and conversion lies here
-
+# type guessing and conversion lies here (it's mostly private)
 require "./ext.cr"
 
 module HashEval
+	# custom exception that is thrown by all HashEval
+	# methods in case a syntax error is caught
 	class ParsingException < Exception
-		# custom exception
 	end
 
-	enum Type
-		# autodetected hash types
+	# autodetected hash types (internal)
+	private enum Type
 		Native
 		JSONy
 		HamlAttributes
 	end
 
-	enum OType
-		# subvariable type
+	# subvariable type (internal)
+	private enum OType
 		SymbolString
 		RegularString
 		FloatingPoint
@@ -25,9 +25,8 @@ module HashEval
 		NilReference
 	end
 
-	def self.evaluate_supported_type(original : String) : Tuple(String | Float64 | Int32 | Bool | Nil, OType)
-		# string to type
-		
+	# evaluates the specified string into a built-in Crystal type
+	private def self.evaluate_supported_type(original : String) : Tuple(String | BigFloat | Int32 | Bool | Nil, OType)		
 		if original.size < 1 || original.downcase == "nil" || original.downcase == "null"
 			# this is de facto nil
 			return {nil, OType::NilReference}
@@ -44,13 +43,14 @@ module HashEval
 			return {original.downcase == "true", OType::TrueFalse}
 		elsif original.is_int32?
 			return {original.to_i32, OType::Integer}
-		elsif original.is_float64?
-			return {original.to_f64, OType::FloatingPoint}
+		elsif original.is_big_f?
+			return {original.to_big_f, OType::FloatingPoint}
 		else
 			return {original, OType::VariableReference}
 		end
 	end
 
+	# preprocesses the key-value pair accordingly
 	private def self.extract_pair_values(pair : String, seperator : String = "=>")
 		if pair.size < 1 || !pair.remove_quotes.includes?(seperator)
 			raise ParsingException.new("Empty unprocessable key-value pair \"#{pair}\" (maybe you're having two commas in a row somewhere in your hash?)")
@@ -82,6 +82,7 @@ module HashEval
 		return {key_evaluated, value_evaluated}
 	end
 
+	# guess the hash type
 	private def self.guess_type(prepr : String) : Type
 		if prepr.starts_and_ends_with?('{', '}')
 			return (prepr.remove_quotes.includes?("=>") ? Type::Native : Type::JSONy)
