@@ -1,10 +1,12 @@
 require "./guesser.cr"
 
 module HashEval
+	alias ResultingHash = Hash(String, Bool | BigFloat | Int32 | String | Nil)
+
 	# evaluate the specified hash string assuming it has Ruby 1.9
 	# simplified hash syntax or the ordinary one
-	private def self.eval_native(chopped : String, delimeter : String = "=>") : Hash(String, Bool | BigFloat | Int32 | String | Nil)
-		result = Hash(String, Bool | BigFloat | Int32 | String | Nil).new
+	private def self.eval_native(chopped : String, delimeter : String = "=>") : ResultingHash
+		result = ResultingHash.new
 
 		# get all pairs raw
 		pairs_raw = chopped.remove_whitespaces.split_respecting_quotes(',')
@@ -19,7 +21,7 @@ module HashEval
 	end
 
 	# autodetects the specified stringified hash type and evaluates 
-	# it into a `Hash(String, Bool | BigFloat | Int32 | String | Nil)`
+	# it into a `ResultingHash`
 	#
 	# throws `ParsingException` in case of a syntax or any other
 	# internal error
@@ -41,7 +43,7 @@ module HashEval
 
 		# never reaches there, but is needed to calm Crystal 1.0
 		# compiler down
-		return Hash(String, Bool | BigFloat | Int32 | String | Nil).new
+		return ResultingHash.new
 	end
 end
 

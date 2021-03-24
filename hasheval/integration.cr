@@ -4,7 +4,7 @@ require "./eval.cr"
 
 class Hash
 	# autodetects the specified stringified hash type and evaluates 
-        # it into a `Hash(String, Bool | BigFloat | Int32 | String | Nil)`
+        # it into a `ResultingHash`
         #
         # throws `ParsingException` in case of a syntax or any other
         # internal error
@@ -22,11 +22,11 @@ class Hash
 		output = "("
 
 		self.each do |kv, vv|
-			if !vv.responds_to?(:to_s) || !kv.responds_to?(to_s)
+			if !vv.responds_to?(:to_s) || !kv.responds_to?(:to_s)
 				raise "#{kv} and #{vv} should both be convertable to String (respond to .to_s method) for this to work"
 			end
 
-			output += "#{kv.to_s}=\"#{vv.to_s.gsub("\"", "\\\""}\" "
+			output += [kv.to_s, '"' + vv.gsub("\"", "\\\"") + '"'].join('=') + ' '
 		end
 
 		output = output.strip + ')'
