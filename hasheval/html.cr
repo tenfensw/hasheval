@@ -2,9 +2,9 @@
 require "./ext.cr"
 
 module HashEval
-	private def self.eval_haml_attributes(chopped : String) : Hash(String, String)
+	private def self.eval_haml_attributes(chopped : String)
 		# this one is much simpler
-		result = Hash(String, String).new
+		result = Hash(String, Bool | BigFloat | Int32 | String | Nil).new
 
 		# first, get all the pairs
 		pairs_raw = chopped.replace_single_with_double.split_respecting_quotes(' ')

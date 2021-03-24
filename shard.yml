@@ -7,7 +7,7 @@ authors:
 description: Hash evaluation in Crystal (string to hash, limited)
 
 development_dependencies:
-   webmock:
-     github: ysbaddaden/minitest.cr
+   minitest:
+     github: tenfensw/minitest
 
 license: MIT

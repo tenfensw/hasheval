@@ -53,7 +53,7 @@ module HashEval
 	# preprocesses the key-value pair accordingly
 	private def self.extract_pair_values(pair : String, seperator : String = "=>")
 		if pair.size < 1 || !pair.remove_quotes.includes?(seperator)
-			raise ParsingException.new("Empty unprocessable key-value pair \"#{pair}\" (maybe you're having two commas in a row somewhere in your hash?)")
+			raise ParsingException.new("Empty unprocessable key-value pair \"#{pair}\" (maybe you're having two commas in a row somewhere in your hash?, seperator \"#{seperator}\")")
 		end
 		
 		key_end_index = pair.index(seperator) || 0

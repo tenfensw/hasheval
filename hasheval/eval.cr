@@ -31,12 +31,17 @@ module HashEval
 		type = guess_type(raw_chopped)
 
 		case type
-		when Type::Native, Type::JSONy
-			seperator = (Type::JSONy ? ":" : "=>")
-			return eval_native(raw_chopped[1...-1], seperator)
+		when Type::Native
+			return eval_native(raw_chopped[1...-1])
+		when Type::JSONy
+			return eval_native(raw_chopped[1...-1], ":")
 		when Type::HamlAttributes
 			return eval_haml_attributes(raw_chopped[1...-1])
 		end
+
+		# never reaches there, but is needed to calm Crystal 1.0
+		# compiler down
+		return Hash(String, Bool | BigFloat | Int32 | String | Nil).new
 	end
 end
 
