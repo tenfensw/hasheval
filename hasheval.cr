@@ -10,3 +10,4 @@
 
 require "./hasheval/eval.cr"
 require "./hasheval/html.cr"
+require "./hasheval/integration.cr"
